@@ -81,8 +81,8 @@ I ingested data from 5 federal agencies across 33 Bronze Delta tables:
 | 0 | Repo & folder structure setup | ✅ Complete |
 | 1 | Workspace setup & Unity Catalog | ✅ Complete |
 | 2 | Bronze layer — raw ingestion (8 notebooks, 33 tables) | ✅ Complete |
-| 3 | Silver layer — cleaning & transformation | 🔄 In Progress |
-| 4 | Gold layer — aggregated business tables | ⏳ Pending |
+| 3 | Silver layer — cleaning & transformation (8 notebooks) | ✅ Complete |
+| 4 | Gold layer — aggregated business tables | 🔄 In Progress |
 | 5 | Analytics & Machine Learning | ⏳ Pending |
 | 6 | Tableau dashboards & portfolio | ⏳ Pending |
 
