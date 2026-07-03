@@ -10,7 +10,7 @@
 
 An end-to-end Databricks Lakehouse project that investigates potential associations between cancer incidence rates across the United States and a broad range of contributing environmental, lifestyle, socioeconomic, and water quality factors.
 
-This project re-ingests all datasets from the [MySQL DBA predecessor project](https://github.com/aryobeen007/mysql-dba-project) into a modern Lakehouse architecture using Apache Spark and Delta Lake, where they undergo scalable data engineering, transformation, enrichment, and advanced analytics.
+I re-ingested all datasets from my [MySQL DBA predecessor project](https://github.com/aryobeen007/mysql-dba-project) into a modern Lakehouse architecture using Apache Spark and Delta Lake, where they undergo scalable data engineering, transformation, enrichment, and advanced analytics.
 
 > **Note:** This project surfaces statistical associations and correlations. It does not claim causal conclusions without appropriate scientific evidence.
 
@@ -22,25 +22,27 @@ This project re-ingests all datasets from the [MySQL DBA predecessor project](ht
 - Is there a measurable relationship between health-based drinking water violations and cancer rates by state?
 - Do states with more CAFO facilities near impaired waterways show higher cancer mortality?
 - What environmental and lifestyle factors are the strongest predictors of elevated cancer rates?
-- How has cancer incidence trended over time relative to changes in air quality (2000–2023)?
+- How has cancer incidence trended over time relative to changes in air quality (2000–2022)?
 
 ---
 
 ## Architecture
 
-This project follows the **Medallion Architecture** (Bronze → Silver → Gold) on Databricks Community Edition with DBFS storage.
+I built this project on the **Medallion Architecture** (Bronze → Silver → Gold) on Databricks Free Edition using Unity Catalog and managed Volumes for storage — no cloud billing attached.
 
 ```
 Raw CSVs (Local)
       │
       ▼
-  DBFS Upload
+Unity Catalog Volume
+  (raw.landing)
       │
       ▼
 ┌─────────────┐    ┌─────────────┐    ┌─────────────┐
 │   BRONZE    │ →  │   SILVER    │ →  │    GOLD     │
 │  Raw Delta  │    │Cleaned Delta│    │ Aggregated  │
-│   Tables    │    │   Tables    │    │   Tables    │
+│  33 tables  │    │   Tables    │    │   Tables    │
+│  52.8M rows │    │             │    │             │
 └─────────────┘    └─────────────┘    └─────────────┘
                                             │
                               ┌─────────────┴─────────────┐
@@ -53,19 +55,22 @@ Raw CSVs (Local)
 
 ## Source Datasets
 
-| # | Dataset | Source | Rows | Key Purpose |
-|---|---------|--------|------|-------------|
-| 1 | Cancer Incidence by State | CDC / NCI SEER | 1,218 | Primary outcome variable |
-| 2 | Cancer Mortality by State | CDC / NCI SEER | 306 | Secondary outcome variable |
-| 3 | EPA Air Quality Index (2000–2023) | EPA AQS | 23,100 | Air pollution exposure |
-| 4 | EPA SDWIS Water Violations | EPA SDWIS | 15,298,031 | Drinking water health violations |
-| 5 | EPA SDWIS Water System Inventory | EPA SDWIS | 433,698 | Geographic water system lookup |
-| 6 | USDA Food Environment Atlas | USDA ERS | 930,317 | Food access & insecurity indicators |
-| 7 | CDC Chronic Disease Indicators (BRFSS) | CDC BRFSS | 375,987 | Lifestyle & behavioral risk factors |
-| 8 | USDA Census of Agriculture | USDA NASS | 3,339,228 | Livestock & agricultural intensity |
-| 9 | EPA ECHO CAFO Facilities | EPA ECHO | 1,188,507 | CAFOs near impaired waterways |
+I ingested data from 5 federal agencies across 33 Bronze Delta tables:
 
-**Total:** ~22.7 million rows across 9 source datasets
+| # | Dataset | Source | Bronze Rows | Key Purpose |
+|---|---------|--------|-------------|-------------|
+| 1 | Cancer Incidence by State (1999–2022) | CDC WONDER | 1,307 | Primary outcome variable |
+| 2 | Cancer Mortality by State (2018–2023) | CDC WONDER | 394 | Secondary outcome variable |
+| 3 | EPA Air Quality Index (2000–2022) | EPA AQS | 24,488 | Air pollution exposure (23 annual files) |
+| 4 | CDC Chronic Disease Indicators | CDC BRFSS | 398,793 | Lifestyle & behavioral risk factors |
+| 5 | SDWIS Water Violations & Enforcement | EPA SDWIS | 15,298,031 | Drinking water health violations |
+| 6 | SDWIS Public Water Systems | EPA SDWIS | 433,698 | Water system inventory |
+| 7 | SDWIS Facilities, Site Visits & More | EPA SDWIS | 6,696,727 | 9 additional SDWIS tables |
+| 8 | NPDES/CAFO Permits & Violations | EPA ECHO | 22,959,739 | 15 NPDES tables — CAFO permits, inspections, enforcement |
+| 9 | USDA Food Environment Atlas | USDA ERS | 957,753 | Food access & insecurity indicators |
+| 10 | USDA Census of Agriculture | USDA NASS | 6,077,214 | Livestock & agricultural intensity |
+
+**Total Bronze:** 52,848,144 rows across 33 Delta tables
 
 ---
 
@@ -74,10 +79,10 @@ Raw CSVs (Local)
 | Phase | Description | Status |
 |-------|-------------|--------|
 | 0 | Repo & folder structure setup | ✅ Complete |
-| 1 | Workspace setup & DBFS upload | 🔄 In Progress |
-| 2 | Bronze layer — raw ingestion (9 notebooks) | ⏳ Pending |
-| 3 | Silver layer — cleaning & transformation (9 notebooks) | ⏳ Pending |
-| 4 | Gold layer — aggregated business tables (7 notebooks) | ⏳ Pending |
+| 1 | Workspace setup & Unity Catalog | ✅ Complete |
+| 2 | Bronze layer — raw ingestion (8 notebooks, 33 tables) | ✅ Complete |
+| 3 | Silver layer — cleaning & transformation | 🔄 In Progress |
+| 4 | Gold layer — aggregated business tables | ⏳ Pending |
 | 5 | Analytics & Machine Learning | ⏳ Pending |
 | 6 | Tableau dashboards & portfolio | ⏳ Pending |
 
@@ -98,8 +103,8 @@ Raw CSVs (Local)
 ```
 cancer-environment-lakehouse/
 ├── notebooks/
-│   ├── 00_setup/          # Workspace config, schema creation
-│   ├── 01_bronze/         # Raw CSV ingestion → Delta tables
+│   ├── 00_setup/          # Workspace config, Unity Catalog schema creation
+│   ├── 01_bronze/         # Raw CSV ingestion → 33 Bronze Delta tables
 │   ├── 02_silver/         # Cleaning, typing, deduplication
 │   ├── 03_gold/           # Aggregated business-ready tables
 │   ├── 04_analytics/      # Correlation & trend analysis
@@ -122,10 +127,11 @@ cancer-environment-lakehouse/
 
 ## Key Technical Decisions
 
-- **Storage:** DBFS (Databricks File System) — free tier, no cloud billing
+- **Storage:** Unity Catalog managed Volumes (`raw.landing`) — free, no cloud billing
 - **Format:** Delta Lake throughout all three layers
-- **Partitioning:** Large tables partitioned by `state_code`/`state_fips` for query performance
-- **Optimization:** Z-ordering on high-cardinality filter columns; broadcast joins for small dimension tables (`dim_state` = 51 rows, `dim_year` = 47 rows)
+- **Catalog:** `cancer_environment_lakehouse` with `raw`, `bronze`, `silver`, `gold` schemas
+- **Column sanitization:** Generic snake_case sanitizer applied at Bronze ingestion across all datasets
+- **Metadata:** Every Bronze row stamped with `ingested_at` and `source_file` for lineage tracing
 - **ML Tracking:** MLflow (built into Databricks) for experiment tracking and model comparison
 - **BI Layer:** Tableau Public connected to Databricks SQL Warehouse
 
@@ -133,4 +139,4 @@ cancer-environment-lakehouse/
 
 ## Predecessor Project
 
-This project builds on the [MySQL DBA End-to-End Project](https://github.com/aryobeen007/mysql-dba-project), which constructed a 4.57 GB star-schema data warehouse (`cancer_environment_db`) with 22.7 million rows across 14 tables, covering the full DBA lifecycle — schema design, performance optimization, backup & recovery, and role-based access control.
+This project builds on my [MySQL DBA End-to-End Project](https://github.com/aryobeen007/mysql-dba-project), where I designed a 4.57 GB star-schema data warehouse (`cancer_environment_db`) with 22.7 million rows across 14 tables, covering the full DBA lifecycle — schema design, ETL, performance optimization, backup & recovery, and role-based access control.
