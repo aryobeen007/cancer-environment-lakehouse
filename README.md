@@ -83,8 +83,8 @@ I ingested data from 5 federal agencies across 33 Bronze Delta tables:
 | 2 | Bronze layer — raw ingestion (8 notebooks, 33 tables) | ✅ Complete |
 | 3 | Silver layer — cleaning & transformation (8 notebooks) | ✅ Complete |
 | 4 | Gold layer — aggregated business tables (7 notebooks) | ✅ Complete |
-| 5 | Analytics & Machine Learning | 🔄 In Progress |
-| 6 | Tableau dashboards & portfolio | ⏳ Pending |
+| 5 | Analytics & Machine Learning (4 analytics + 2 ML notebooks) | ✅ Complete |
+| 6 | Tableau dashboards & portfolio | 🔄 In Progress |
 
 ---
 
