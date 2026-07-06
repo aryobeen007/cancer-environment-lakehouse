@@ -84,7 +84,7 @@ I ingested data from 5 federal agencies across 33 Bronze Delta tables:
 | 3 | Silver layer — cleaning & transformation (8 notebooks) | ✅ Complete |
 | 4 | Gold layer — aggregated business tables (7 notebooks) | ✅ Complete |
 | 5 | Analytics & Machine Learning (4 analytics + 2 ML notebooks) | ✅ Complete |
-| 6 | Tableau dashboards & portfolio | 🔄 In Progress |
+| 6 | Tableau dashboards & portfolio (3 dashboards published) | ✅ Complete |
 
 ---
 
@@ -92,9 +92,9 @@ I ingested data from 5 federal agencies across 33 Bronze Delta tables:
 
 *Links will be added as dashboards are published.*
 
-- Dashboard 1 — Cancer & Environment Overview *(coming soon)*
-- Dashboard 2 — Water Quality Deep Dive *(coming soon)*
-- Dashboard 3 — Environmental Risk Profile *(coming soon)*
+- [Dashboard 1 — Cancer & Environment Overview](https://public.tableau.com/app/profile/naseer3899/viz/CancerEnvironmentLakehouse/CancerEnvironmentOverview)
+- [Dashboard 2 — Water Quality Deep Dive](https://public.tableau.com/app/profile/naseer3899/viz/CancerEnvironmentLakehouse/WaterQualityDeepDive)
+- [Dashboard 3 — Environmental Risk Profile](https://public.tableau.com/app/profile/naseer3899/viz/CancerEnvironmentLakehouse/EnvironmentalRiskProfile)
 
 ---
 
