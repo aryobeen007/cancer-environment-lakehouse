@@ -2,7 +2,7 @@
 
 **Author:** Naseer Aryobee — Senior Data Engineer  
 **Tech:** Python · Apache Spark · Delta Lake · Databricks · MLflow · Tableau Public  
-**Status:** 🚧 In Progress
+**Status:** | ✅ Complete |
 
 ---
 
